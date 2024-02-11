@@ -1,5 +1,5 @@
 from datetime import date
-from enum import Enum, unique
+from enum import StrEnum, auto, unique
 
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -8,10 +8,10 @@ from todo_app.database import Base
 
 
 @unique
-class TodoState(Enum):
-    Ongoing = 1
-    Finished = 2
-    Archived = 3
+class TodoState(StrEnum):
+    Ongoing = auto()
+    Finished = auto()
+    Archived = auto()
 
 
 class Todo(Base):

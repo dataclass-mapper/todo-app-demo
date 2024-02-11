@@ -1,19 +1,9 @@
 from datetime import date
-from enum import StrEnum, auto
 
-from dataclass_mapper import MapperMode, create_mapper, enum_mapper, enum_mapper_from, ignore, mapper, mapper_from
+from dataclass_mapper import MapperMode, create_mapper, ignore, mapper, mapper_from
 from pydantic import BaseModel, RootModel
 
 from . import tables as t
-
-
-@enum_mapper(t.TodoState)
-@enum_mapper_from(t.TodoState)
-class TodoState(StrEnum):
-    Ongoing = auto()
-    Finished = auto()
-    Archived = auto()
-
 
 Tag = RootModel[str]
 
@@ -40,7 +30,7 @@ class Todo(BaseModel):
     title: str
     description: str
     deadline: date | None = None
-    state: TodoState
+    state: t.TodoState
     tags: list[Tag]
 
 
@@ -49,5 +39,5 @@ class TodoUpdate(BaseModel):
     title: str
     description: str
     deadline: date | None = None
-    state: TodoState
+    state: t.TodoState
     tags: list[Tag]

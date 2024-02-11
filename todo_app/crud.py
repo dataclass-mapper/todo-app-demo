@@ -16,12 +16,11 @@ def get_todo(db: Session, todo_id: int) -> m.Todo:
     return map_to(todo, m.Todo)
 
 
-def get_todos(db: Session, state: m.TodoState | None, tag: str | None) -> list[m.Todo]:
+def get_todos(db: Session, state: t.TodoState | None, tag: str | None) -> list[m.Todo]:
     """Fetch a list of all todos"""
     query = db.query(t.Todo)
     if state:
-        db_state = map_to(state, t.TodoState)
-        query = query.filter(t.Todo.state == db_state)
+        query = query.filter(t.Todo.state == state)
     if tag:
         query = query.filter(t.Todo.tags.any(t.Tag.tag == tag))
     todos = query.all()

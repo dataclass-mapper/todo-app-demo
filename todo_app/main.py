@@ -24,7 +24,7 @@ def get_db():
 
 @app.get("/todos", tags=["todo"])
 def get_list_of_todos(
-    state: Annotated[models.TodoState | None, Query()] = None,
+    state: Annotated[models.t.TodoState | None, Query()] = None,
     tag: Annotated[str | None, Query()] = None,
     db: Session = Depends(get_db),
 ) -> list[models.Todo]:
