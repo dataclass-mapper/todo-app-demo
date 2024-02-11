@@ -1,8 +1,8 @@
 from datetime import date
 from enum import StrEnum, auto
 
-from dataclass_mapper import MapperMode, enum_mapper, enum_mapper_from, ignore, mapper, mapper_from
-from pydantic import BaseModel
+from dataclass_mapper import MapperMode, create_mapper, enum_mapper, enum_mapper_from, ignore, mapper, mapper_from
+from pydantic import BaseModel, RootModel
 
 from . import tables as t
 
@@ -15,26 +15,33 @@ class TodoState(StrEnum):
     Archived = auto()
 
 
+Tag = RootModel[str]
+
+
+create_mapper(t.Tag, Tag, {"root": "tag"})
+create_mapper(Tag, t.Tag, {t.Tag.tag: "root", t.Tag.todo_id: ignore()})
+
+
 @mapper(
     t.Todo,
-    {t.Todo.id: ignore(), t.Todo.state: lambda: t.TodoState.Ongoing, t.Todo.tags: ignore()},
+    {t.Todo.id: ignore(), t.Todo.state: lambda: t.TodoState.Ongoing},
     mapper_mode=MapperMode.CREATE,
 )
 class TodoCreate(BaseModel):
     title: str
     description: str
     deadline: date | None = None
-    tags: list[str]
+    tags: list[Tag]
 
 
-@mapper_from(t.Todo, {"tags": lambda self: [tag.tag for tag in self.tags]})
+@mapper_from(t.Todo)
 class Todo(BaseModel):
     id: int
     title: str
     description: str
     deadline: date | None = None
     state: TodoState
-    tags: list[str]
+    tags: list[Tag]
 
 
 @mapper(t.Todo, {t.Todo.id: ignore(), t.Todo.tags: ignore()}, mapper_mode=MapperMode.UPDATE)
@@ -43,4 +50,4 @@ class TodoUpdate(BaseModel):
     description: str
     deadline: date | None = None
     state: TodoState
-    tags: list[str]
+    tags: list[Tag]

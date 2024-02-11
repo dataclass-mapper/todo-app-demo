@@ -11,7 +11,7 @@ packages = [{include = "todo_app"}]
 python = "^3.12"
 fastapi = "^0.109.2"
 pydantic = "^2.6.1"
-SQLAlchemy = {extras = ["mypy"], version = "^2.0.25"}
+SQLAlchemy = "^2.0.25"
 uvicorn = {extras = ["standard"], version = "^0.27.1"}
 dataclass-mapper = "^2.0.0a0"
 
@@ -19,6 +19,7 @@ dataclass-mapper = "^2.0.0a0"
 pytest = "^8.0.0"
 ruff = "^0.2.1"
 mypy = "^1.8.0"
+httpx = "^0.26.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -65,4 +66,4 @@ extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.
 check_untyped_defs = true
 warn_return_any = true
 files = ["todo_app"]
-plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
+plugins = ["pydantic.mypy"]

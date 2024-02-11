@@ -31,7 +31,6 @@ def get_todos(db: Session, state: m.TodoState | None, tag: str | None) -> list[m
 def create_todo(db: Session, todo_create: m.TodoCreate) -> m.Todo:
     """Create a new todo and insert it into the database"""
     todo = map_to(todo_create, t.Todo)
-    todo.tags = [t.Tag(tag=tag) for tag in todo_create.tags]
     db.add(todo)
     db.commit()
     db.refresh(todo)
@@ -49,7 +48,7 @@ def update_todo(db: Session, todo_id: int, todo_update: m.TodoUpdate) -> m.Todo:
     db_tags: list[t.Tag] = []
     existing_tags = {tag.tag: tag for tag in todo.tags}
     for tag in todo_update.tags:
-        db_tags.append(existing_tags.get(tag) or t.Tag(tag=tag))
+        db_tags.append(existing_tags.get(tag.root) or map_to(tag, t.Tag))
     todo.tags = db_tags
 
     db.commit()
@@ -64,7 +63,7 @@ def find_tag(tag_orms: list[t.Tag], tag: str) -> t.Tag | None:
     return None
 
 
-def get_tags(db: Session) -> list[str]:
+def get_tags(db: Session) -> list[m.Tag]:
     """Get list of all tags"""
     tag_rows = db.query(t.Tag.tag).group_by(t.Tag.tag).order_by(func.count(t.Tag.tag).desc()).all()
-    return [row[0] for row in tag_rows]
+    return [m.Tag(tag[0]) for tag in tag_rows]

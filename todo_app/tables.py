@@ -23,7 +23,7 @@ class Todo(Base):
     deadline: Mapped[date | None] = mapped_column()
     state: Mapped[TodoState] = mapped_column()
 
-    tags: Mapped[list["Tag"]] = relationship()
+    tags: Mapped[list["Tag"]] = relationship(order_by="Tag.tag", cascade="save-update, merge, delete, delete-orphan")
 
 
 class Tag(Base):

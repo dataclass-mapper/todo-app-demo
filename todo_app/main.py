@@ -47,7 +47,7 @@ def update_todo(todo_id: int, todo_update: models.TodoUpdate, db: Session = Depe
 
 
 @app.get("/tags", tags=["tag"])
-def get_list_of_tags(db: Session = Depends(get_db)) -> list[str]:
+def get_list_of_tags(db: Session = Depends(get_db)) -> list[models.Tag]:
     return crud.get_tags(db)
 
 
