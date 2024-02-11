@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "todo-app"
+version = "0.1.0"
+description = "Example project for demonstrating the dataclass-mapper library"
+authors = ["Jakob Kogler <jakob.kogler@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "todo_app"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.109.2"
+pydantic = "^2.6.1"
+SQLAlchemy = {extras = ["mypy"], version = "^2.0.25"}
+uvicorn = {extras = ["standard"], version = "^0.27.1"}
+dataclass-mapper = "^2.0.0a0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+ruff = "^0.2.1"
+mypy = "^1.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+app = "todo_app.main:start"
+seed = "seed_example_data:main"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+  # Pyflakes
+  "F",
+  # pycodestyle Error
+  "E",
+  # pycodestyle Warning
+  "W",
+  # flake8-pie
+  "PIE",
+  # isort
+  "I001",
+  # flake8-simplify
+  "SIM",
+  # flake8-bugbear
+  "B",
+  # Ruff-specific rules
+  "RUF",
+  # flake8-bandit
+  "S",
+  # flake8-comprehensions
+  "C4",
+  # flake8-commas
+  "COM818",
+]
+ignore = ["S101"]
+
+[tool.ruff.lint.flake8-bugbear]
+extend-immutable-calls = ["fastapi.Depends", "fastapi.params.Depends", "fastapi.Query", "fastapi.params.Query"]
+
+[tool.mypy]
+check_untyped_defs = true
+warn_return_any = true
+files = ["todo_app"]
+plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
