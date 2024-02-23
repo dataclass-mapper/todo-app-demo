@@ -6,9 +6,11 @@ from sqlalchemy.orm import Session
 
 from todo_app.exceptions import NotFoundException
 
-from . import crud, database, models
+from . import database, models
+from .services import crud
+from .tables import Base
 
-database.Base.metadata.create_all(bind=database.engine)
+Base.metadata.create_all(bind=database.engine)
 
 
 app = FastAPI(title="Todo App", docs_url="/")
@@ -24,7 +26,7 @@ def get_db():
 
 @app.get("/todos", tags=["todo"])
 def get_list_of_todos(
-    state: Annotated[models.t.TodoState | None, Query()] = None,
+    state: Annotated[models.TodoState | None, Query()] = None,
     tag: Annotated[str | None, Query()] = None,
     db: Session = Depends(get_db),
 ) -> list[models.Todo]:

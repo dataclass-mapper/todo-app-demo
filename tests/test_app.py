@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
-from todo_app.database import Base
 from todo_app.main import app, get_db
+from todo_app.tables import Base
 
 
 @pytest.fixture

@@ -2,10 +2,9 @@ from dataclass_mapper import map_to
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from todo_app import models as m
+from todo_app import tables as t
 from todo_app.exceptions import NotFoundException
-
-from . import models as m
-from . import tables as t
 
 
 def get_todo(db: Session, todo_id: int) -> m.Todo:
@@ -16,11 +15,12 @@ def get_todo(db: Session, todo_id: int) -> m.Todo:
     return map_to(todo, m.Todo)
 
 
-def get_todos(db: Session, state: t.TodoState | None, tag: str | None) -> list[m.Todo]:
+def get_todos(db: Session, state: m.TodoState | None, tag: str | None) -> list[m.Todo]:
     """Fetch a list of all todos"""
     query = db.query(t.Todo)
     if state:
-        query = query.filter(t.Todo.state == state)
+        db_state = map_to(state, t.TodoState)
+        query = query.filter(t.Todo.state == db_state)
     if tag:
         query = query.filter(t.Todo.tags.any(t.Tag.tag == tag))
     todos = query.all()

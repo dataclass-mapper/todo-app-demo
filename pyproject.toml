@@ -14,6 +14,7 @@ pydantic = "^2.6.1"
 SQLAlchemy = "^2.0.25"
 uvicorn = {extras = ["standard"], version = "^0.27.1"}
 dataclass-mapper = "^2.0.0a0"
+pytestarch = "^2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"

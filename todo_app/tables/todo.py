@@ -1,10 +1,14 @@
 from datetime import date
 from enum import StrEnum, auto, unique
+from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from todo_app.database import Base
+
+if TYPE_CHECKING:
+    from .tag import Tag
 
 
 @unique
@@ -24,10 +28,3 @@ class Todo(Base):
     state: Mapped[TodoState] = mapped_column()
 
     tags: Mapped[list["Tag"]] = relationship(order_by="Tag.tag", cascade="save-update, merge, delete, delete-orphan")
-
-
-class Tag(Base):
-    __tablename__ = "tags"
-
-    todo_id: Mapped[int] = mapped_column(ForeignKey("todos.id"), primary_key=True)
-    tag: Mapped[str] = mapped_column(String(64), primary_key=True)
