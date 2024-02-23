@@ -8,10 +8,6 @@ from todo_app.exceptions import NotFoundException
 
 from . import database, models
 from .services import crud
-from .tables import Base
-
-Base.metadata.create_all(bind=database.engine)
-
 
 app = FastAPI(title="Todo App", docs_url="/")
 

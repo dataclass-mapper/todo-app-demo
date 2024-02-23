@@ -21,3 +21,15 @@ def test_models_dont_import_anything(evaluable):
         .are_sub_modules_of("todo_app")
     )
     rule.assert_applies(evaluable)
+
+
+def test_tables_are_only_imported_by_service(evaluable):
+    rule = (
+        Rule()
+        .modules_that()
+        .are_named("todo_app.tables")
+        .should_only()
+        .be_imported_by_modules_that()
+        .are_sub_modules_of("todo_app.services")
+    )
+    rule.assert_applies(evaluable)

@@ -2,7 +2,7 @@ from datetime import date
 from enum import StrEnum, auto, unique
 from typing import TYPE_CHECKING
 
-from sqlalchemy import String
+from sqlalchemy import Index, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from todo_app.database import Base
@@ -28,3 +28,6 @@ class Todo(Base):
     state: Mapped[TodoState] = mapped_column()
 
     tags: Mapped[list["Tag"]] = relationship(order_by="Tag.tag", cascade="save-update, merge, delete, delete-orphan")
+
+
+Index("idx_todos_id", Todo.id)

@@ -1,68 +1,70 @@
 from dataclass_mapper import map_to
 from sqlalchemy import func
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
-from todo_app import models as m
-from todo_app import tables as t
 from todo_app.exceptions import NotFoundException
+from todo_app.models import Tag, Todo, TodoCreate, TodoState, TodoUpdate
+from todo_app.tables import Tag as TagOrm
+from todo_app.tables import Todo as TodoOrm
+from todo_app.tables import TodoState as TodoStateOrm
 
 
-def get_todo(db: Session, todo_id: int) -> m.Todo:
+def get_todo(db: Session, todo_id: int) -> Todo:
     """Fetch a single todo by id"""
-    todo = db.query(t.Todo).filter(t.Todo.id == todo_id).first()
+    todo = db.query(TodoOrm).options(selectinload(TodoOrm.tags)).filter(TodoOrm.id == todo_id).first()
     if not todo:
         raise NotFoundException("Todo", todo_id)
-    return map_to(todo, m.Todo)
+    return map_to(todo, Todo)
 
 
-def get_todos(db: Session, state: m.TodoState | None, tag: str | None) -> list[m.Todo]:
+def get_todos(db: Session, state: TodoState | None, tag: str | None) -> list[Todo]:
     """Fetch a list of all todos"""
-    query = db.query(t.Todo)
+    query = db.query(TodoOrm).options(selectinload(TodoOrm.tags))
     if state:
-        db_state = map_to(state, t.TodoState)
-        query = query.filter(t.Todo.state == db_state)
+        db_state = map_to(state, TodoStateOrm)
+        query = query.filter(TodoOrm.state == db_state)
     if tag:
-        query = query.filter(t.Todo.tags.any(t.Tag.tag == tag))
+        query = query.filter(TodoOrm.tags.any(TagOrm.tag == tag))
     todos = query.all()
-    return [map_to(todo, m.Todo) for todo in todos]
+    return [map_to(todo, Todo) for todo in todos]
 
 
-def create_todo(db: Session, todo_create: m.TodoCreate) -> m.Todo:
+def create_todo(db: Session, todo_create: TodoCreate) -> Todo:
     """Create a new todo and insert it into the database"""
-    todo = map_to(todo_create, t.Todo)
+    todo = map_to(todo_create, TodoOrm)
     db.add(todo)
     db.commit()
     db.refresh(todo)
-    return map_to(todo, m.Todo)
+    return map_to(todo, Todo)
 
 
-def update_todo(db: Session, todo_id: int, todo_update: m.TodoUpdate) -> m.Todo:
+def update_todo(db: Session, todo_id: int, todo_update: TodoUpdate) -> Todo:
     """Update a todo"""
-    todo = db.query(t.Todo).filter(t.Todo.id == todo_id).first()
+    todo = db.query(TodoOrm).options(selectinload(TodoOrm.tags)).filter(TodoOrm.id == todo_id).first()
     if not todo:
         raise NotFoundException("Todo", todo_id)
 
     map_to(todo_update, todo)
 
-    db_tags: list[t.Tag] = []
+    db_tags: list[TagOrm] = []
     existing_tags = {tag.tag: tag for tag in todo.tags}
     for tag in todo_update.tags:
-        db_tags.append(existing_tags.get(tag.root) or map_to(tag, t.Tag))
+        db_tags.append(existing_tags.get(tag.root) or map_to(tag, TagOrm))
     todo.tags = db_tags
 
     db.commit()
     db.refresh(todo)
-    return map_to(todo, m.Todo)
+    return map_to(todo, Todo)
 
 
-def find_tag(tag_orms: list[t.Tag], tag: str) -> t.Tag | None:
+def find_tag(tag_orms: list[TagOrm], tag: str) -> TagOrm | None:
     for tag_orm in tag_orms:
         if tag_orm.tag == tag:
             return tag_orm
     return None
 
 
-def get_tags(db: Session) -> list[m.Tag]:
+def get_tags(db: Session) -> list[Tag]:
     """Get list of all tags"""
-    tag_rows = db.query(t.Tag.tag).group_by(t.Tag.tag).order_by(func.count(t.Tag.tag).desc()).all()
-    return [m.Tag(tag[0]) for tag in tag_rows]
+    tag_rows = db.query(TagOrm.tag).group_by(TagOrm.tag).order_by(func.count(TagOrm.tag).desc()).all()
+    return [Tag(tag[0]) for tag in tag_rows]

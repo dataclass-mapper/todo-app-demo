@@ -1,56 +1,58 @@
 from dataclass_mapper import MapperMode, create_enum_mapper, create_mapper, ignore
 
-from todo_app import models as m
-from todo_app import tables as t
+from todo_app.models import Tag, Todo, TodoCreate, TodoState, TodoUpdate
+from todo_app.tables import Tag as TagOrm
+from todo_app.tables import Todo as TodoOrm
+from todo_app.tables import TodoState as TodoStateOrm
 
 create_mapper(
-    m.Tag,
-    t.Tag,
+    Tag,
+    TagOrm,
     {
-        t.Tag.tag: "root",
-        t.Tag.todo_id: ignore(),
+        TagOrm.tag: "root",
+        TagOrm.todo_id: ignore(),
     },
 )
 
 create_mapper(
-    t.Tag,
-    m.Tag,
+    TagOrm,
+    Tag,
     {
         "root": "tag",
     },
 )
 
 create_enum_mapper(
-    m.TodoState,
-    t.TodoState,
+    TodoState,
+    TodoStateOrm,
 )
 
 create_enum_mapper(
-    t.TodoState,
-    m.TodoState,
+    TodoStateOrm,
+    TodoState,
 )
 
 create_mapper(
-    m.TodoCreate,
-    t.Todo,
+    TodoCreate,
+    TodoOrm,
     {
-        t.Todo.id: ignore(),
-        t.Todo.state: lambda: t.TodoState.Ongoing,
+        TodoOrm.id: ignore(),
+        TodoOrm.state: lambda: TodoStateOrm.Ongoing,
     },
     mapper_mode=MapperMode.CREATE,
 )
 
 create_mapper(
-    t.Todo,
-    m.Todo,
+    TodoOrm,
+    Todo,
 )
 
 create_mapper(
-    m.TodoUpdate,
-    t.Todo,
+    TodoUpdate,
+    TodoOrm,
     {
-        t.Todo.id: ignore(),
-        t.Todo.tags: ignore(),
+        TodoOrm.id: ignore(),
+        TodoOrm.tags: ignore(),
     },
     mapper_mode=MapperMode.UPDATE,
 )

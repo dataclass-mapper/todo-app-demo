@@ -1,32 +1,32 @@
 from datetime import date
 
-from todo_app import tables as t
-from todo_app.database import Base, SessionLocal, engine
+from todo_app.database import SessionLocal
+from todo_app.tables import Tag as TagOrm
+from todo_app.tables import Todo as TodoOrm
+from todo_app.tables import TodoState as TodoStateOrm
 
 
 def main():
-    Base.metadata.create_all(bind=engine)
-
-    grocery_todo = t.Todo(
+    grocery_todo = TodoOrm(
         title="Go grocery shopping",
         description="Bread, Butter, Cheese, Milk",
         deadline=date(2024, 2, 12),
-        state=t.TodoState.Ongoing,
-        tags=[t.Tag(tag="home")],
+        state=TodoStateOrm.Ongoing,
+        tags=[TagOrm(tag="home")],
     )
-    release_todo = t.Todo(
+    release_todo = TodoOrm(
         title="Release v2 library",
         description="Release v2 of the dataclass_mapper library",
         deadline=date(2024, 2, 28),
-        state=t.TodoState.Ongoing,
-        tags=[t.Tag(tag="development"), t.Tag(tag="opensource")],
+        state=TodoStateOrm.Ongoing,
+        tags=[TagOrm(tag="development"), TagOrm(tag="opensource")],
     )
-    optimize_todo = t.Todo(
+    optimize_todo = TodoOrm(
         title="Optimize generated code",
         description="The generated mapper code can be a bit inefficient, optimize it.",
         deadline=date(2024, 4, 30),
-        state=t.TodoState.Ongoing,
-        tags=[t.Tag(tag="development"), t.Tag(tag="opensource")],
+        state=TodoStateOrm.Ongoing,
+        tags=[TagOrm(tag="development"), TagOrm(tag="opensource")],
     )
 
     db = SessionLocal()
