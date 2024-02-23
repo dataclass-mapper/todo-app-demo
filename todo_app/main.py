@@ -1,8 +1,9 @@
+from collections.abc import AsyncGenerator
 from typing import Annotated
 
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from todo_app.exceptions import NotFoundException
 
@@ -12,41 +13,41 @@ from .services import crud
 app = FastAPI(title="Todo App", docs_url="/")
 
 
-def get_db():
-    db = database.SessionLocal()
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
+    db = database.AsyncSessionLocal()
     try:
         yield db
     finally:
-        db.close()
+        await db.close()
 
 
 @app.get("/todos", tags=["todo"])
-def get_list_of_todos(
+async def get_list_of_todos(
     state: Annotated[models.TodoState | None, Query()] = None,
     tag: Annotated[str | None, Query()] = None,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ) -> list[models.Todo]:
-    return crud.get_todos(db, state=state, tag=tag)
+    return await crud.get_todos(db, state=state, tag=tag)
 
 
 @app.get("/todos/{todo_id}", tags=["todo"])
-def get_todo_by_id(todo_id: int, db: Session = Depends(get_db)) -> models.Todo:
-    return crud.get_todo(db, todo_id)
+async def get_todo_by_id(todo_id: int, db: AsyncSession = Depends(get_db)) -> models.Todo:
+    return await crud.get_todo(db, todo_id)
 
 
 @app.post("/todos", tags=["todo"])
-def create_new_todo(todo_create: models.TodoCreate, db: Session = Depends(get_db)) -> models.Todo:
-    return crud.create_todo(db, todo_create)
+async def create_new_todo(todo_create: models.TodoCreate, db: AsyncSession = Depends(get_db)) -> models.Todo:
+    return await crud.create_todo(db, todo_create)
 
 
 @app.patch("/todos/{todo_id}", tags=["todo"])
-def update_todo(todo_id: int, todo_update: models.TodoUpdate, db: Session = Depends(get_db)) -> models.Todo:
-    return crud.update_todo(db, todo_id, todo_update)
+async def update_todo(todo_id: int, todo_update: models.TodoUpdate, db: AsyncSession = Depends(get_db)) -> models.Todo:
+    return await crud.update_todo(db, todo_id, todo_update)
 
 
 @app.get("/tags", tags=["tag"])
-def get_list_of_tags(db: Session = Depends(get_db)) -> list[models.Tag]:
-    return crud.get_tags(db)
+async def get_list_of_tags(db: AsyncSession = Depends(get_db)) -> list[models.Tag]:
+    return await crud.get_tags(db)
 
 
 @app.exception_handler(NotFoundException)

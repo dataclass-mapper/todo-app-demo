@@ -1,12 +1,13 @@
+from asyncio import get_event_loop
 from datetime import date
 
-from todo_app.database import SessionLocal
+from todo_app.database import AsyncSessionLocal
 from todo_app.tables import Tag as TagOrm
 from todo_app.tables import Todo as TodoOrm
 from todo_app.tables import TodoState as TodoStateOrm
 
 
-def main():
+async def seed():
     grocery_todo = TodoOrm(
         title="Go grocery shopping",
         description="Bread, Butter, Cheese, Milk",
@@ -29,6 +30,15 @@ def main():
         tags=[TagOrm(tag="development"), TagOrm(tag="opensource")],
     )
 
-    db = SessionLocal()
+    db = AsyncSessionLocal()
     db.add_all([grocery_todo, release_todo, optimize_todo])
-    db.commit()
+    await db.commit()
+
+
+def main():
+    loop = get_event_loop()
+    loop.run_until_complete(seed())
+
+
+if __name__ == "__main__":
+    main()
