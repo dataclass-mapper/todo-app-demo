@@ -5,9 +5,7 @@ from sqlalchemy.orm import selectinload
 
 from todo_app.exceptions import NotFoundException
 from todo_app.models import Tag, Todo, TodoCreate, TodoState, TodoUpdate
-from todo_app.tables import Tag as TagOrm
-from todo_app.tables import Todo as TodoOrm
-from todo_app.tables import TodoState as TodoStateOrm
+from todo_app.tables import TagOrm, TodoOrm, TodoStateOrm
 
 
 async def get_todo(db: AsyncSession, todo_id: int) -> Todo:

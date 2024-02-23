@@ -1,9 +1,7 @@
 from dataclass_mapper import MapperMode, create_enum_mapper, create_mapper, ignore
 
 from todo_app.models import Tag, Todo, TodoCreate, TodoState, TodoUpdate
-from todo_app.tables import Tag as TagOrm
-from todo_app.tables import Todo as TodoOrm
-from todo_app.tables import TodoState as TodoStateOrm
+from todo_app.tables import TagOrm, TodoOrm, TodoStateOrm
 
 create_mapper(
     Tag,

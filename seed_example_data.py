@@ -2,9 +2,7 @@ from asyncio import get_event_loop
 from datetime import date
 
 from todo_app.database import AsyncSessionLocal
-from todo_app.tables import Tag as TagOrm
-from todo_app.tables import Todo as TodoOrm
-from todo_app.tables import TodoState as TodoStateOrm
+from todo_app.tables import TagOrm, TodoOrm, TodoStateOrm
 
 
 async def seed():

@@ -8,28 +8,28 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from todo_app.database import Base
 
 if TYPE_CHECKING:
-    from .tag import Tag
+    from .tag import TagOrm
 
 
 @unique
-class TodoState(StrEnum):
+class TodoStateOrm(StrEnum):
     Ongoing = auto()
     Finished = auto()
     Archived = auto()
 
 
-class Todo(Base):
+class TodoOrm(Base):
     __tablename__ = "todos"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(length=88))
     description: Mapped[str] = mapped_column()
     deadline: Mapped[date | None] = mapped_column()
-    state: Mapped[TodoState] = mapped_column()
+    state: Mapped[TodoStateOrm] = mapped_column()
 
-    tags: Mapped[list["Tag"]] = relationship(
-        order_by="Tag.tag", cascade="save-update, merge, delete, delete-orphan", lazy="immediate"
+    tags: Mapped[list["TagOrm"]] = relationship(
+        order_by="TagOrm.tag", cascade="save-update, merge, delete, delete-orphan", lazy="immediate"
     )
 
 
-Index("idx_todos_id", Todo.id)
+Index("idx_todos_id", TodoOrm.id)
