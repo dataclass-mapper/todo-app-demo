@@ -52,7 +52,7 @@ async def update_todo(db: AsyncSession, todo_id: int, todo_update: TodoUpdate) -
     db_tags: list[TagOrm] = []
     existing_tags = {tag.tag: tag for tag in todo.tags}
     for tag in todo_update.tags:
-        db_tags.append(existing_tags.get(tag.root) or map_to(tag, TagOrm))
+        db_tags.append(existing_tags.get(tag) or map_to(tag, TagOrm))
     todo.tags = db_tags
 
     await db.commit()

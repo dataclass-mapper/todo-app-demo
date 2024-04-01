@@ -106,13 +106,13 @@ files = [
 
 [[package]]
 name = "dataclass-mapper"
-version = "2.0.0a0"
+version = "2.0.0a1"
 description = "Autogenerate mappings between dataclasses"
 optional = false
-python-versions = ">=3.8,<4.0"
+python-versions = "<4.0,>=3.8"
 files = [
-    {file = "dataclass_mapper-2.0.0a0-py3-none-any.whl", hash = "sha256:5b83ca54282ba7a0ddf1080f9ff29e40efa936cad7db8933d38294511965054e"},
-    {file = "dataclass_mapper-2.0.0a0.tar.gz", hash = "sha256:4ba0f52694602e2a55d8f4fec02c5211d8edbd16a284c89658d1af0af70d833e"},
+    {file = "dataclass_mapper-2.0.0a1-py3-none-any.whl", hash = "sha256:9b83d8a9f292e6ec52030e6b0b36cc7e19e45278be93199d47e0ac28741422bb"},
+    {file = "dataclass_mapper-2.0.0a1.tar.gz", hash = "sha256:a1e1c6c00740d2554fd2a16c85506363eeecbdcd66ddd9d6f7cf286adb14b760"},
 ]
 
 [package.extras]
@@ -1137,4 +1137,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "67df6d6090cb9ab8b7c685bc1dc43e9bf4c128f4acbdcf917be42eebaf47f19b"
+content-hash = "0a02aff8b4b6446a252677386f15232ea61925fca5464291db30adab46db68fb"

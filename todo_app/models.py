@@ -1,9 +1,10 @@
 from datetime import date
 from enum import StrEnum, auto
+from typing import TypeAlias
 
-from pydantic import BaseModel, RootModel
+from pydantic import BaseModel
 
-Tag = RootModel[str]
+Tag: TypeAlias = str
 
 
 class TodoState(StrEnum):

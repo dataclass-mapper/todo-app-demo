@@ -7,7 +7,7 @@ create_mapper(
     Tag,
     TagOrm,
     {
-        TagOrm.tag: "root",
+        TagOrm.tag: "",
         TagOrm.todo_id: ignore(),
     },
 )
@@ -16,7 +16,7 @@ create_mapper(
     TagOrm,
     Tag,
     {
-        "root": "tag",
+        "": "tag",
     },
 )
 
