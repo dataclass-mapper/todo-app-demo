@@ -3,6 +3,10 @@ from dataclass_mapper import MapperMode, create_enum_mapper, create_mapper, igno
 from todo_app.models import Tag, Todo, TodoCreate, TodoState, TodoUpdate
 from todo_app.tables import TagOrm, TodoOrm, TodoStateOrm
 
+###################
+# Mapper for tags #
+###################
+
 create_mapper(
     Tag,
     TagOrm,
@@ -20,6 +24,10 @@ create_mapper(
     },
 )
 
+#########################
+# Mapper for state enum #
+#########################
+
 create_enum_mapper(
     TodoState,
     TodoStateOrm,
@@ -30,6 +38,17 @@ create_enum_mapper(
     TodoState,
 )
 
+####################
+# Mapper for Todos #
+####################
+
+# fetch Todo from database
+create_mapper(
+    TodoOrm,
+    Todo,
+)
+
+# create new Todo in Ongoing state
 create_mapper(
     TodoCreate,
     TodoOrm,
@@ -40,16 +59,13 @@ create_mapper(
     mapper_mode=MapperMode.CREATE,
 )
 
-create_mapper(
-    TodoOrm,
-    Todo,
-)
-
+# update an existing todo
 create_mapper(
     TodoUpdate,
     TodoOrm,
     {
         TodoOrm.id: ignore(),
+        # map tags later in order to update existing tags instead of recreating them
         TodoOrm.tags: ignore(),
     },
     mapper_mode=MapperMode.UPDATE,
