@@ -17,9 +17,9 @@ dataclass-mapper = "2.0.0a1"
 aiosqlite = "^0.20.0"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.0.0"
-ruff = "^0.3.5"
-mypy = "^1.8.0"
+pytest = "^8.2.0"
+ruff = "^0.4.2"
+mypy = "^1.10.0"
 httpx = "^0.26.0"
 alembic = "^1.13.1"
 pytestarch = "^2.0.0"
