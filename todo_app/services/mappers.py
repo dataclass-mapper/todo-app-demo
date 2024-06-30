@@ -48,13 +48,18 @@ create_mapper(
     Todo,
 )
 
+
 # create new Todo in Ongoing state
+def const_Ongoing_State() -> TodoStateOrm:
+    return TodoStateOrm.Ongoing
+
+
 create_mapper(
     TodoCreate,
     TodoOrm,
     {
         TodoOrm.id: ignore(),
-        TodoOrm.state: lambda: TodoStateOrm.Ongoing,
+        TodoOrm.state: const_Ongoing_State,
     },
     mapper_mode=MapperMode.CREATE,
 )
